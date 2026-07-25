@@ -8,6 +8,7 @@
     name:
       - docker
       - docker-compose
+    extra_args: --break-system-packages
 
 - name: run container
   docker_container:
