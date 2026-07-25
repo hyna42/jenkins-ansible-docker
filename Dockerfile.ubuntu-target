@@ -1,0 +1,25 @@
+# image de base
+FROM ubuntu@sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90
+
+# mettre à jour et installer les paqueyt
+RUN sed -i 's|http://archive.ubuntu.com/ubuntu|http://fr.archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get install -y openssh-server sudo iproute2 curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# définit le mot de passe test pour l'utilisateur root
+RUN echo 'root:test' | chpasswd
+
+# Activer la connexion root par mot de passe
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# Créer le répertoire ou sshd stock son fichier PID
+RUN mkdir -p /run/sshd /root/.ssh
+
+# Copier la clé publique de la machine jenkins vers la cible ubuntu-target
+# COPY id_ed25519.pub /root/.ssh/authorized_keys
+
+#RUN chmod 600 /root/.ssh/authorized_keys
+
+# lancer ssh au démarrage du conteneur en mode détaché
+CMD ["/usr/sbin/sshd", "-D"]

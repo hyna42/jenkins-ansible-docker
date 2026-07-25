@@ -1,0 +1,24 @@
+FROM jenkins/jenkins@sha256:f4f65e6cd1405cd889b7f5ac33f9d5cdc2a099de6b87fe8a3933b9c5d53d1d02
+
+USER root
+RUN apt-get update && apt-get install -y \
+  python3 \
+  ssh \
+  openssh-client \
+  ansible \
+  iproute2 \
+  curl \
+  sshpass \
+  docker.io \
+  maven \
+  && rm -rf /var/lib/apt/lists/*
+
+#RUN mkdir -p /var/jenkins_home/.ssh && \
+  #ssh-keygen -t ed25519 -f /var/jenkins_home/.ssh/id_ed25519 -N "" -C "jenkins@docker" && \
+  #chown -R jenkins:jenkins /var/jenkins_home/.ssh
+
+# Créer le groupe docker avec le GID 984 (celui de l'hôte)
+RUN groupadd -g 984 docker-host && \
+    usermod -aG docker-host jenkins
+
+USER jenkins

@@ -1,0 +1,45 @@
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    image: jenkins-ansible:v1
+    container_name: jenkins
+    labels:
+      kompose.service.type: nodeport
+    ports:
+      - '8082:8080'
+      - '443:8443'
+      - '50000:50000'
+    volumes:
+      - jenkins_data:/jenkins_home
+      - jenkins:/var/jenkins_config
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      jadoc_net:
+        ipv4_address: 172.19.0.10
+
+  ubuntu-target:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu-target
+    image: ubuntu-target:v1
+    container_name: ubuntu-target
+    ports:
+      - '8011:80'
+    networks:
+      jadoc_net:
+        ipv4_address: 172.19.0.11
+
+volumes:
+  jenkins_data:
+    driver: local
+  jenkins:
+    driver: local
+
+networks:
+  jadoc_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
