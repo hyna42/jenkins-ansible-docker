@@ -6,6 +6,9 @@ docker exec -u root jenkins /bin/bash -c "rm -f /var/jenkins_home/.ssh/id_ed2551
 # 2. Générer la clé SSH sur le driver jenkins
 docker exec jenkins /bin/bash -c "ssh-keygen -t ed25519 -C 'jenkins@driver' -f /var/jenkins_home/.ssh/id_ed25519 -N ''"
 
+# 3. Configuration des permissions
+docker exec jenkins /bin/bash -c "chmod :w"
+
 # 3. Extraire la clé publique du conteneur vers un fichier local sur ubuntu-lab
 docker exec jenkins bash -c "cat /var/jenkins_home/.ssh/id_ed25519.pub" > jenkins_id_ed25519.pub
 
