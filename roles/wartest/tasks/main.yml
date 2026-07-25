@@ -5,9 +5,7 @@
 
 - name: pip install docker-py
   pip:
-    name:
-      - docker
-      - docker-compose
+    name: docker
     extra_args: --break-system-packages
 
 - name: run container
