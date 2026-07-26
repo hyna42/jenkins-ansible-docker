@@ -21,4 +21,10 @@ RUN apt-get update && apt-get install -y \
 RUN groupadd -g 984 docker-host && \
     usermod -aG docker-host jenkins
 
+# Installation de JMeter
+RUN cd /opt && \
+    curl -L https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz | tar -xzf - && \
+    ln -s /opt/apache-jmeter-5.6.3 /opt/jmeter
+
+
 USER jenkins
